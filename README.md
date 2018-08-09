@@ -1,13 +1,15 @@
-ggmm
-====
+==============================================================
+Weighted Expectation Maximization for Gaussian Mixture Models
+==============================================================
 
-Python module to train GMMs using CUDA (via CUDAMat)
+Python module to train weighted GMMs using CUDA (via CUDAMat)
 
 ### Contents
-[Dependencies](#dependencies)  
-[Installation](#installation)  
-[Example usage](#example-usage)  
-[Documentation](#documentation)  
+[Dependencies](#dependencies)
+[Installation](#installation)
+[Test Generation](#test-generation)
+[Example usage](#example-usage)
+[Documentation](#documentation)
 
 ### Dependencies
 
@@ -20,10 +22,10 @@ Python module to train GMMs using CUDA (via CUDAMat)
 
 ### Installation
 
-Clone ggmm and CUDAMat in local install path:
+Clone wgmm and CUDAMat in local install path:
 ```bash
 cd ${INSTALL_PATH}
-git clone https://github.com/ebattenberg/ggmm.git
+git clone https://github.com/sahibdhanjal/Weighted-Expectation-Maximization.git
 git clone https://github.com/cudamat/cudamat.git
 ```
 
@@ -37,21 +39,25 @@ Run CUDAMat tests (optional, requires nose):
 cd ${INSTALL_PATH}/cudamat
 nosetests
 ```
-Run ggmm tests (optional, requires nose):
+Run wgmm tests (optional, requires nose):
 ```bash
-cd ${INSTALL_PATH}/ggmm
+cd ${INSTALL_PATH}/wgmm
 nosetests
 ```
-Install ggmm:
+Install wgmm:
 ```bash
-cd ${INSTALL_PATH}/ggmm
+cd ${INSTALL_PATH}/wgmm
 sudo pip install .
 ```
+
+### Test Generation
+1. Open the example folder
+2. Open a new terminal and run ```bash python testGen.py ```
 
 ### Example Usage
 
 ```python
-import ggmm.gpu as ggmm
+import wgmm.gpu as wgmm
 
 X = some_module.load_training_data()
 
@@ -61,8 +67,8 @@ X = some_module.load_training_data()
 N, D = X.shape
 K = 128
 
-ggmm.init()
-gmm = ggmm.GMM(K,D)
+wgmm.init()
+gmm = wgmm.GMM(K,D)
 
 thresh = 1e-3 # convergence threshold
 n_iter = 20 # maximum number of EM iterations
@@ -80,5 +86,7 @@ covars = gmm.get_covars()
 posteriors = gmm.compute_posteriors(X)
 ```
 
+For testing it on randomly generated data, generate test case as described above and then run ```bash python gmmtest.py```
+
 ### Documentation
-Documentation available [here](http://ebattenberg.github.io/ggmm)
+Documentation available [here](http://ebattenberg.github.io/wgmm)

@@ -7,13 +7,13 @@ with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='ggmm',
+    name='wgmm',
     version='0.1.0',
-    description='Python module to train GMMs using CUDA',
+    description='Python Module to Train weighted GMMs using CUDA',
     long_description=long_description,
-    url='https://github.com/ebattenberg/ggmm',
-    author='Eric Battenberg',
-    author_email='ebattenberg@gmail.com',
+    url='https://github.com/sahibdhanjal/Weighted-Expectation-Maximization',
+    author='Sahib Dhanjal',
+    author_email='dhanjalsahib@gmail.com',
     license='MIT',
     classifiers=[
         'Intended Audience :: Science/Research',
