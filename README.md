@@ -9,8 +9,6 @@ Python module to train weighted GMMs using CUDA (via CUDAMat)
 
 [Installation](#installation)
 
-[Test Generation](#test-generation)
-
 [Example usage](#example-usage)
 
 [Documentation](#documentation)
@@ -54,9 +52,6 @@ cd ${INSTALL_PATH}/wgmm
 sudo pip install .
 ```
 
-### Test Generation
-1. Open the example folder
-2. Open a new terminal and run ```python testGen.py ```
 
 ### Example Usage
 
@@ -90,7 +85,7 @@ covars = gmm.get_covars()
 posteriors = gmm.compute_posteriors(X)
 ```
 
-For testing it on randomly generated data, generate test case as described above and then run ```python gmmtest.py```
+For testing it on randomly generated data, you can run ```python gmmtest.py``` from the examples folder. On setting appropriate flags, a data file and a plot (only for 1D/3D case) will also be generated.
 
 ### Documentation
 Documentation for GGMM by Eric Battenberg available [here](http://ebattenberg.github.io/ggmm)
