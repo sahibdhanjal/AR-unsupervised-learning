@@ -1,14 +1,18 @@
-==============================================================
-Weighted Expectation Maximization for Gaussian Mixture Models
-==============================================================
+# Weighted Expectation Maximization for GMMs
+===============================================================
 
 Python module to train weighted GMMs using CUDA (via CUDAMat)
 
 ### Contents
+
 [Dependencies](#dependencies)
+
 [Installation](#installation)
+
 [Test Generation](#test-generation)
+
 [Example usage](#example-usage)
+
 [Documentation](#documentation)
 
 ### Dependencies
@@ -52,7 +56,7 @@ sudo pip install .
 
 ### Test Generation
 1. Open the example folder
-2. Open a new terminal and run ```bash python testGen.py ```
+2. Open a new terminal and run ```python testGen.py ```
 
 ### Example Usage
 
@@ -86,7 +90,7 @@ covars = gmm.get_covars()
 posteriors = gmm.compute_posteriors(X)
 ```
 
-For testing it on randomly generated data, generate test case as described above and then run ```bash python gmmtest.py```
+For testing it on randomly generated data, generate test case as described above and then run ```python gmmtest.py```
 
 ### Documentation
-Documentation available [here](http://ebattenberg.github.io/wgmm)
+Documentation for GGMM by Eric Battenberg available [here](http://ebattenberg.github.io/ggmm)
