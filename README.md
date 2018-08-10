@@ -5,13 +5,10 @@ Python module to train weighted GMMs using CUDA (via CUDAMat)
 
 ### Contents
 
-[Dependencies](#dependencies)
-
-[Installation](#installation)
-
-[Example usage](#example-usage)
-
-[Documentation](#documentation)
+* [Dependencies](#dependencies)
+* [Installation](#installation)
+* [Example usage](#example-usage)
+* [Documentation](#documentation)
 
 ### Dependencies
 
