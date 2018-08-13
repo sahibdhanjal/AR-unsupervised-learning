@@ -6,7 +6,7 @@ Parameters:
     D       : data dimension
     weights : weights of individual components
     scale   : range of each dimension + range of covar
-    mult    : scale points or not
+    samp    : scale points or not
     -------------------------------------------------------------------------
     for example, for D = 3, scale is a D+1 x 1 array which looks as follows
     [x_scale, y_scale, z_scale, sig_scale]. Points range for 0 - x_scale in
@@ -17,6 +17,7 @@ Parameters:
 Functions:
     load_training_data(K, D, weights, scale, file, plot)    : generates weighted points
     plotPoints(points)                                      : plots the weighted points
+    resample(points, wghts)                                 : resample points based on wghts
 
 '''
 from random import randint
@@ -27,14 +28,34 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def preprocess(points, wghts):
-    output = []
-    thresh = 1e-6
+# resampling algo - http://cecas.clemson.edu/~ahoover/ece854/lecture-notes/lecture-pf.pdf
+def resample(points, wghts):
     N, D = points.shape
+
+    # normalize data
+    wghts = a = np.divide(wghts, sum(wghts))
+    output = np.zeros(shape=(N,D))
+
+    # resample
+    Q = np.cumsum(wghts)
+    T = np.random.random(N+1)
+    T.sort()
+    T[N] = 1
+
+    i = j = 1
+    idx = [0]*N
+
+    while(i<N):
+        if (T[i]<Q[j]):
+            idx[i] = j
+            i = i+1
+        else:
+            j = j+1
+
     for i in range(N):
-        if wghts[i]>thresh:
-            output.append(points[i][:]*wghts[i])
-    return np.array(output)
+        output[i] = points[idx[i]]
+
+    return output
 
 def plotPoints(points):
     N,D = points.shape
@@ -69,7 +90,7 @@ def plotPoints(points):
     else:
         raise Exception("Plotter cannot visualize data higher than 3 Dimensions")
 
-def load_training_data(K, D, weights=[], scale=[], file="", plot=False, mult=True):
+def load_training_data(K, D, weights=[], scale=[], file="", plot=False, samp=False):
     # if weights are empty, initialize all weights to be equal
     if len(weights) == 0:
         weights = (1/K)*np.ones(K)
@@ -111,7 +132,8 @@ def load_training_data(K, D, weights=[], scale=[], file="", plot=False, mult=Tru
     # calculate weights based on Gaussian Distribution
     wghts = np.zeros(N)
     for i in range(K):
-        wghts = wghts + mult * weights[i]*mvn.pdf(points, means[i][:], covars[D*i:D*i+D][:])
+        wghts = wghts + weights[i]*mvn.pdf(points, means[i][:], covars[D*i:D*i+D][:])
+    print(sum(wghts))
 
     # print means and covariances
     print("GMM generated around:\n")
@@ -123,12 +145,21 @@ def load_training_data(K, D, weights=[], scale=[], file="", plot=False, mult=Tru
         print covars[D*i:D*i+D][:]
         print "========================="
 
+    # concatenate wghts with points
     weighted_points = np.zeros(shape=(N,D+1))
     for i in range(N):
         weighted_points[i][:] = np.append(list(map(int,points[i][:])), wghts[i])
 
-    if mult:
-        output = preprocess(points, wghts)
+    # plot the points if requested
+    if plot:
+        try:
+            plotPoints(weighted_points)
+        except Exception as err:
+            print(err)
+
+    # resample points based on weights
+    if samp:
+        output = resample(points, wghts)
     else:
         output = weighted_points
 
@@ -141,12 +172,5 @@ def load_training_data(K, D, weights=[], scale=[], file="", plot=False, mult=Tru
             s = " ".join(str(j) for j in output[i]) + "\n"
             f.write(s)
         f.close()
-
-    # plot the points if requested
-    if plot:
-        try:
-            plotPoints(weighted_points)
-        except Exception as err:
-            print(err)
 
     return output
