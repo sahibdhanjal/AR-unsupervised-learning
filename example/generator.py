@@ -6,6 +6,7 @@ Parameters:
     D       : data dimension
     weights : weights of individual components
     scale   : range of each dimension + range of covar
+    mult    : scale points or not
     -------------------------------------------------------------------------
     for example, for D = 3, scale is a D+1 x 1 array which looks as follows
     [x_scale, y_scale, z_scale, sig_scale]. Points range for 0 - x_scale in
@@ -15,7 +16,7 @@ Parameters:
 
 Functions:
     load_training_data(K, D, weights, scale, file, plot)    : generates weighted points
-    plotPoints(points)                                          : plots the weighted points
+    plotPoints(points)                                      : plots the weighted points
 
 '''
 from random import randint
@@ -26,7 +27,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def plotPoints(points, D, N):
+def preprocess(points, wghts):
+    output = []
+    thresh = 1e-6
+    N, D = points.shape
+    for i in range(N):
+        if wghts[i]>thresh:
+            output.append(points[i][:]*wghts[i])
+    return np.array(output)
+
+def plotPoints(points):
+    N,D = points.shape
+    D = D-1
     if D==1:
         plt.plot(points[:, [0]], points[:, [1]])
         plt.xlabel('points - x')
@@ -50,14 +62,14 @@ def plotPoints(points, D, N):
         y = points[:, [1]].reshape(1,N)[0]
         z = points[:, [2]].reshape(1,N)[0]
         c = points[:, [3]].reshape(1,N)[0]
-        sp = ax.scatter(x, y, z, c=c, cmap=plt.viridis())
+        sp = ax.scatter(x, y, z, c=c, cmap=plt.hot())
         plt.colorbar(sp)
         plt.show()
 
     else:
         raise Exception("Plotter cannot visualize data higher than 3 Dimensions")
 
-def load_training_data(K, D, weights=[], scale=[], file="", plot=False):
+def load_training_data(K, D, weights=[], scale=[], file="", plot=False, mult=True):
     # if weights are empty, initialize all weights to be equal
     if len(weights) == 0:
         weights = (1/K)*np.ones(K)
@@ -81,7 +93,7 @@ def load_training_data(K, D, weights=[], scale=[], file="", plot=False):
         point = []
         for j in range(D):
             point.append(randint(1,scale[j]))
-        sig = randint(0,scale[-1])
+        sig = randint(1,scale[-1])
 
         # set means and covariances
         means[i][:] = point
@@ -99,37 +111,42 @@ def load_training_data(K, D, weights=[], scale=[], file="", plot=False):
     # calculate weights based on Gaussian Distribution
     wghts = np.zeros(N)
     for i in range(K):
-        wghts = wghts + weights[i]*mvn.pdf(points, means[i][:], covars[D*i:D*i+D][:])
-
-    # update weights for points
-    weighted_points = np.zeros(shape=(N,D+1))
-    for i in range(N):
-        weighted_points[i][:] = np.append(list(map(int,points[i][:])), wghts[i])
+        wghts = wghts + mult * weights[i]*mvn.pdf(points, means[i][:], covars[D*i:D*i+D][:])
 
     # print means and covariances
     print("GMM generated around:\n")
     for i in range(K):
-        print ("Point",i,":")
-        print ("mean:[", ",".join(str(j) for j in means[i]), "]")
-        print ("weight:",weights[i])
-        print ("covar:")
-        print (covars[D*i:D*i+D][:])
-        print ("=========================")
+        print "Point",i+1,":"
+        print "mean:[", ",".join(str(j) for j in means[i]), "]"
+        print "weight:",weights[i]
+        print "covar:"
+        print covars[D*i:D*i+D][:]
+        print "========================="
+
+    weighted_points = np.zeros(shape=(N,D+1))
+    for i in range(N):
+        weighted_points[i][:] = np.append(list(map(int,points[i][:])), wghts[i])
+
+    if mult:
+        output = preprocess(points, wghts)
+    else:
+        output = weighted_points
 
     # write to data file if filename given
     if file!="":
         # write data to file
         f = open(file, "w")
+        N, _ = output.shape
         for i in range(N):
-            s = " ".join(str(int(j)) for j in weighted_points[i][:-1]) + " " + str(weighted_points[i][D]) + "\n"
+            s = " ".join(str(j) for j in output[i]) + "\n"
             f.write(s)
         f.close()
 
     # plot the points if requested
     if plot:
         try:
-            plotPoints(weighted_points, D, N)
+            plotPoints(weighted_points)
         except Exception as err:
             print(err)
 
-    return weighted_points
+    return output
