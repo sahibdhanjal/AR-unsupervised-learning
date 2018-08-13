@@ -1,5 +1,6 @@
 from math import *
 import numpy as np
+import generator
 import ggmm.gpu as ggmm
 
 ##################################################
@@ -9,7 +10,6 @@ import ggmm.gpu as ggmm
 # or use an already existing data file consisting of
 X = np.loadtxt("data.txt")
 N,D = X.shape
-D = D-1
 X = generator.resample(X[:,0:D-1],X[:,[-1]])
 
 ##################################################
@@ -18,6 +18,7 @@ X = generator.resample(X[:,0:D-1],X[:,[-1]])
 # N - training examples
 # D - data dimension
 # K - number of GMM components
+D = D-1
 K = 3
 
 ggmm.init()
@@ -28,7 +29,7 @@ n_iter = 1000000 # maximum number of EM iterations
 init_params = 'wmc' # initialize weights, means, and covariances
 
 # train GMM
-gmm.fit(X, thresh, n_iter, init_params=init_params, verbose=True)
+gmm.fit(X, thresh, n_iter, init_params=init_params, verbose=False)
 
 # retrieve parameters from trained GMM
 weights = gmm.get_weights()
