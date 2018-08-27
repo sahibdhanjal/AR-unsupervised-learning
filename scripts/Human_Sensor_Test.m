@@ -17,16 +17,16 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %---------------------- GMM Parameters Setup -------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-input = 'points.mat';
-output = 'results.mat';
+inp = 'points.mat';         % name of the file to which the weighting matrix is written
+out = 'results.mat';        % name of the file to which outputs are written
 write = false;              % write data to .txt file or not
-thresh = 6;     % means 1e-6
-num_iter = 5;   % means 10^5
-verbose = 1;    % set 1 if you want to print num iterations/ time
-K = 5;          % expected number of gaussians
+thresh = 6;                 % means 1e-6
+num_iter = 5;               % means 10^5
+verbose = 0;                % set 1 if you want to print num iterations/ time
+K = 3;                      % expected number of gaussians
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%------------------- ROS parameters - Astronet -----------------------%
+%-------------------- Main Loop for Simulation -----------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %set up the domain
@@ -48,6 +48,9 @@ R=10; %Range of Human Vision: doesn't really matter as it extends outside of fra
 %Define the human head state x_h y_h z_h pitch_h roll_h yaw_h
 x_h=3; y_h=2; z_h=1.8; pitch_h=0; roll_h=0; yaw_h=pi/2;
 t = 1;
+
+points=[x_mat(:),y_mat(:),z_mat(:)];
+
 %simulate human walking in a circle
 %This loop will be a while loop in the final implementation
 while t<=100
@@ -80,17 +83,24 @@ while t<=100
 
     %Now Update the Visual Interest Accumulation Function
     Q=Q+Si;
-    save(input,'Q','-v6');
-    disp(t);
-    if  exist(fullfile(cd, input), 'file') == 2
-        commandStr = ['python emgmm.py ' input ' ' output ' ' int2str(num_iter) ' ' int2str(thresh) ' ' int2str(verbose) ' ' int2str(K)];
+    output = resample([points,Q(:)]);
+    
+    save(inp,'output','-v6');
+    if  exist(fullfile(cd, inp), 'file') == 2
+        commandStr = ['python emgmm.py ' inp ' ' out ' ' int2str(num_iter) ' ' int2str(thresh) ' ' int2str(verbose) ' ' int2str(K)];
         system(commandStr);
         
-        if  exist(fullfile(cd, output), 'file') == 2
+        if  exist(fullfile(cd, out), 'file') == 2
+            load(out);
+            means
+            covars
+            weights
             t = t+1;
-        end
-        
+        end        
     end
+    
 end
+
+
 %Plot The accumulated Q for fun
 scatter3(x_mat(:),y_mat(:),z_mat(:),Q(:))
