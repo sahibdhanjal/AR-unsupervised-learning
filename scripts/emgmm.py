@@ -18,7 +18,7 @@ Functions:
 '''
 def readEngine(file):
     try:
-        X = si.loadmat(file)['output']
+        X = si.loadmat(file)['Q']
     except:
         raise('No data matrix available! See if .mat is generated or not')
     return X

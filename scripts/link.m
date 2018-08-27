@@ -13,7 +13,7 @@ write = false;  % write data to .txt file or not
 thresh = 6;     % means 1e-6
 num_iter = 5;   % means 10^5
 verbose = 1;    % set 1 if you want to print num iterations/ time
-K = 5;          % expected number of gaussians
+K = 3;          % expected number of gaussians
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % File Name for Input and Output

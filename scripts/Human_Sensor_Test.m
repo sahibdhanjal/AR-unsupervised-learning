@@ -4,9 +4,14 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------- ROS Environment Setup -------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-setenv('ROS_IP','localhost');
-setenv('ROS_MASTER_URI', 'http://127.0.0.1:11311');
-rosinit('NodeName', '/matlab');
+% Using ROS or not
+flag = false;
+
+if (flag)
+    setenv('ROS_IP','localhost');
+    setenv('ROS_MASTER_URI', 'http://127.0.0.1:11311');
+    rosinit('NodeName', '/matlab');
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -42,10 +47,10 @@ R=10; %Range of Human Vision: doesn't really matter as it extends outside of fra
 
 %Define the human head state x_h y_h z_h pitch_h roll_h yaw_h
 x_h=3; y_h=2; z_h=1.8; pitch_h=0; roll_h=0; yaw_h=pi/2;
-
+t = 1;
 %simulate human walking in a circle
 %This loop will be a while loop in the final implementation
-for t=1:1:100
+while t<=100
     %Human head measurements come in from VICON here. I use simulated data
     x_h=2+cos(t/10);
     y_h=2+sin(t/10);
@@ -75,11 +80,17 @@ for t=1:1:100
 
     %Now Update the Visual Interest Accumulation Function
     Q=Q+Si;
-    save(fullfile(cd,input),'Q');
-
-    % commandStr = ['python emgmm.py ' input ' ' output ' ' int2str(num_iter) ' ' int2str(thresh) ' ' int2str(verbose)];
-    % system(commandStr);
-
+    save(input,'Q','-v6');
+    disp(t);
+    if  exist(fullfile(cd, input), 'file') == 2
+        commandStr = ['python emgmm.py ' input ' ' output ' ' int2str(num_iter) ' ' int2str(thresh) ' ' int2str(verbose) ' ' int2str(K)];
+        system(commandStr);
+        
+        if  exist(fullfile(cd, output), 'file') == 2
+            t = t+1;
+        end
+        
+    end
 end
 %Plot The accumulated Q for fun
 scatter3(x_mat(:),y_mat(:),z_mat(:),Q(:))
