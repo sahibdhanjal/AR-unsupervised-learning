@@ -1,4 +1,4 @@
-# Weighted Expectation Maximization for GMMs
+# Unsupervised Learning of Assistive Camera Views by an Aerial Co-robot in Augmented Reality Multitasking Environments
 ===============================================================
 
 Python module to train weighted GMMs using CUDA (via CUDAMat)
