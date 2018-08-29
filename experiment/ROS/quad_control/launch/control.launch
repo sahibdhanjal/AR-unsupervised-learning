@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <include file="$(find vicon_bridge)/launch/vicon.launch"/>
+    <include file="$(find asctec_hl_interface)/launch/quad1.launch"/>
+    <node pkg="asctec_hl_interface" type="main" name="asctec_main" respawn="true" />
+    <node pkg="quad_control" type="convert" name="matlab_convert" respawn="true" />
+</launch>

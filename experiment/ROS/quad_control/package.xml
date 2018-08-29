@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>quad_control</name>
+  <version>0.0.0</version>
+  <description>Convert Geometry Msgs to Asctec Control Messages</description>
+  <maintainer email="dhanjalsahib@gmail.com">Sahib Dhanjal</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>geometry_msgs</depend>
+  <depend>asctec_hl_comm</depend>
+</package>
