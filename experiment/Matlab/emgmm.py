@@ -58,6 +58,7 @@ def execute(input, output, thresh, n_iter, timer, k):
     X = readEngine(input)
     means, weights, covars = EMEngine(X, thresh, n_iter, timer, k)
     writeEngine(output, means, weights, covars)
+    return 1
 
 '''
 Main Function:
@@ -97,4 +98,5 @@ if __name__=='__main__':
         timer = 0
         k = 3
 
-    execute(inp, out, thresh, n_iter, timer, k)
+    while True:
+        execute(inp, out, thresh, n_iter, timer, k)
