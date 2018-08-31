@@ -20,7 +20,7 @@ def readEngine(file):
     try:
         X = si.loadmat(file)['output']
     except:
-        raise('No data matrix available! See if .mat is generated or not')
+        X = np.array([])
     return X
 
 def EMEngine(X, thresh_, n_iter_, timer, K_, init_='wmc'):
@@ -56,9 +56,11 @@ def writeEngine(file, means, weights, covars):
 
 def execute(input, output, thresh, n_iter, timer, k):
     X = readEngine(input)
-    means, weights, covars = EMEngine(X, thresh, n_iter, timer, k)
-    writeEngine(output, means, weights, covars)
-    return 1
+    if X.size == 0:
+        pass
+    else:
+        means, weights, covars = EMEngine(X, thresh, n_iter, timer, k)
+        writeEngine(output, means, weights, covars)
 
 '''
 Main Function:
@@ -91,12 +93,13 @@ if __name__=='__main__':
         k = int(sys.argv[6])
 
     else:
-        inp = 'data.mat'
+        inp = 'points.mat'
         out = 'results.mat'
         thresh = 1e-10
         n_iter = 10**6
         timer = 0
         k = 3
+
 
     while True:
         execute(inp, out, thresh, n_iter, timer, k)
