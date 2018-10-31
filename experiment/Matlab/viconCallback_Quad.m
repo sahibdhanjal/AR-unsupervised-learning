@@ -1,8 +1,8 @@
 %------------------------ Define viconCallback -----------------------%
 function viconCallback_Quad(src, msg)
     global x_1 y_1 z_1 pitch_1 roll_1 yaw_1;
-    x_1 = msg.Transform.Translation.X;
-    y_1 = msg.Transform.Translation.Y;
+    x_1 = msg.Transform.Translation.X+2;
+    y_1 = msg.Transform.Translation.Y+2;
     z_1 = msg.Transform.Translation.Z;
     
     qx = msg.Transform.Rotation.X;
