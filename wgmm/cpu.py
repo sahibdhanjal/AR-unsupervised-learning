@@ -2,7 +2,7 @@
 CPU/Numpy backend for GMM training and inference
 '''
 
-# Author: Eric Battenberg <ebattenberg@gmail.com>
+# Author: Sahib Dhanjal <dhanjalsahib@gmail.com>
 # Based on gmm.py from sklearn
 
 # python2 compatibility
