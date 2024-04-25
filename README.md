@@ -6,7 +6,16 @@ Python module to train weighted GMMs using CUDA (via CUDAMat)
 ### Citation
 If you use this work or draw inspiration from it, kindly cite this using:
 ```
-W. Bentz, S. Dhanjal and D. Panagou, "Unsupervised Learning of Assistive Camera Views by an Aerial Co-robot in Augmented Reality Multitasking Environments," 2019 International Conference on Robotics and Automation (ICRA), Montreal, QC, Canada, 2019, pp. 3003-3009, doi: 10.1109/ICRA.2019.8793587. keywords: {Visualization;Task analysis;Cameras;Robot vision systems},
+@INPROCEEDINGS{8793587,
+  author={Bentz, William and Dhanjal, Sahib and Panagou, Dimitra},
+  booktitle={2019 International Conference on Robotics and Automation (ICRA)}, 
+  title={Unsupervised Learning of Assistive Camera Views by an Aerial Co-robot in Augmented Reality Multitasking Environments}, 
+  year={2019},
+  volume={},
+  number={},
+  pages={3003-3009},
+  keywords={Visualization;Task analysis;Cameras;Robot vision systems},
+  doi={10.1109/ICRA.2019.8793587}}
 ```
 
 ### Contents
